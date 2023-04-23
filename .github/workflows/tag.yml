@@ -47,6 +47,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: 
-          - robbof/prometheus-actions-exporter:latest
-          - robbof/prometheus-actions-exporter:${{ env.RELEASE_VERSION }}
+          tags: |
+            robbof/prometheus-actions-exporter:latest
+            robbof/prometheus-actions-exporter:${{ env.RELEASE_VERSION }}
