@@ -28,11 +28,26 @@ func main() {
 
 func interval() {
 	ticker := time.NewTicker(time.Duration(config.PollRate) * time.Second)
-	workflows := make(chan *github.WorkflowRuns)
 
 	for ; true; <-ticker.C {
-		go githubApi.GetWorkflowRunsByRepo("homepage", "RobboF", workflows)
-		metrics.SetWorkflowDuration(<-workflows)
+
+		var repos []*github.Repository
+		var owner string
+		if config.GithubOrgSet {
+			repos = githubApi.GetReposForOrg(config.GithubOrg)
+			owner = config.GithubOrg
+
+		} else if config.GithubUserSet {
+			repos = githubApi.GetReposForUser(config.GithubUser)
+			owner = config.GithubUser
+		}
+		for _, repo := range repos {
+			fmt.Printf("\n%+v\n", *repo.Name)
+			workflows := githubApi.GetWorkflowRunsByRepo(*repo.Name, owner)
+			metrics.SetWorkflowDuration(workflows)
+			metrics.SetWorkflowTotals(workflows)
+
+		}
 
 	}
 }
