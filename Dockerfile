@@ -9,7 +9,7 @@ RUN go mod download
 
 COPY ./cmd ./pkg ./
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o prometheus-actions-exporter ./cmd/main/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o prometheus-actions-exporter ./cmd/main.go
 
 # Deploy the application binary into a lean image
 FROM gcr.io/distroless/base-debian11 AS build-release-stage
